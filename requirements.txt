@@ -1,0 +1,31 @@
+# Core web frameworks
+flask
+flask-cors
+streamlit
+
+# Auth & security
+bcrypt
+PyJWT
+
+# LLM / RAG / NLP
+langchain-community
+langchain-huggingface
+sentence-transformers
+faiss-cpu
+
+# Knowledge graph
+neo4j
+pyvis
+
+# Document processing
+pdfplumber
+pytesseract
+python-docx
+Pillow
+cleantext
+
+# Data handling & utilities
+numpy
+pandas
+tqdm
+requests

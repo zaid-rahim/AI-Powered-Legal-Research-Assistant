@@ -1,0 +1,57 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+*.egg
+.Python
+build/
+dist/
+
+# --- Virtual environments ---
+venv/
+env/
+.venv/
+ENV/
+
+# --- Editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+
+# --- Backups / scratch files ---
+*.bak
+*.save
+*.tmp
+*~
+
+# --- Environment & secrets ---
+.env
+.env.*
+*.key
+users.json
+
+# --- Databases ---
+*.db
+*.sqlite
+*.sqlite3
+
+# --- Generated data / large binary artifacts ---
+vector_store/
+vector_store_summaries/
+knowledge_graph/cases_triples_with_summary.json
+*.faiss
+*.pkl
+*.index
+
+# --- User-uploaded content (runtime data, not source) ---
+Web/backend/user_uploads/
+Web/chat_history.json
+Web/chat_*.html
+
+# --- Logs ---
+*.log
+logs/

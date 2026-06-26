@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="claude" data-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — LawPakAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --brand:       hsl(15, 63.1%, 59.6%);
+      --brand-dim:   hsl(15, 54.2%, 51.2%);
+      --bg-000:      hsl(60, 2.1%, 18.4%);
+      --bg-100:      hsl(60, 2.7%, 14.5%);
+      --bg-200:      hsl(30, 3.3%, 11.8%);
+      --bg-300:      hsl(60, 2.6%,  7.6%);
+      --text-000:    hsl(48, 33.3%, 97.1%);
+      --text-100:    hsl(48, 33.3%, 97.1%);
+      --text-200:    hsl(50,  9%,   73.7%);
+      --text-400:    hsl(48,  4.8%, 59.2%);
+      --border:      hsla(51, 16.5%, 84.5%, 0.12);
+      --border-strong: hsla(51, 16.5%, 84.5%, 0.22);
+      --font-ui:     'Inter', system-ui, sans-serif;
+      --font-serif:  'Lora', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: var(--font-ui);
+      background-color: var(--bg-100);
+      color: var(--text-100);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      scrollbar-width: thin;
+      scrollbar-color: hsla(51, 16.5%, 84.5%, 0.2) transparent;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-ui); }
+
+    /* ── Page center layout ── */
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    /* ── Logo / brand mark ── */
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-200);
+      margin-bottom: 36px;
+    }
+    .brand-mark svg { width: 20px; height: 20px; }
+
+    /* ── Heading ── */
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 4vw, 34px);
+      font-weight: 600;
+      color: var(--text-000);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .page-sub {
+      font-size: 14px;
+      color: var(--text-400);
+      margin-bottom: 32px;
+    }
+
+    /* ── Checkbox card ── */
+    .consent-card {
+      width: 100%;
+      max-width: 420px;
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .consent-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: background 120ms;
+      text-align: left;
+    }
+    .consent-row:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+    .consent-row:hover { background: var(--border); }
+
+    /* Custom checkbox */
+    .consent-row input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      border: 1.5px solid var(--border-strong);
+      border-radius: 4px;
+      background: var(--bg-000);
+      margin-top: 2px;
+      cursor: pointer;
+      position: relative;
+      transition: background 150ms, border-color 150ms;
+    }
+    .consent-row input[type="checkbox"]:checked {
+      background: var(--brand);
+      border-color: var(--brand);
+    }
+    .consent-row input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .consent-text {
+      font-size: 13px;
+      color: var(--text-200);
+      line-height: 1.55;
+    }
+    .consent-text a {
+      color: var(--text-100);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .consent-text a:hover { color: var(--brand); }
+
+    /* ── Create account button ── */
+    .btn-create {
+      width: 100%;
+      max-width: 420px;
+      padding: 13px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      background: var(--bg-000);
+      cursor: not-allowed;
+      opacity: 0.45;
+      transition: background 150ms, opacity 150ms, transform 150ms;
+      margin-bottom: 32px;
+    }
+    .btn-create.enabled {
+      background: var(--text-000);
+      color: var(--bg-100);
+      opacity: 1;
+      cursor: pointer;
+    }
+    .btn-create.enabled:hover {
+      background: hsl(48, 33.3%, 90%);
+      transform: translateY(-1px);
+    }
+    .btn-create.enabled:active { transform: translateY(0); }
+
+    /* ── Bottom email note ── */
+    .email-note {
+      font-size: 13px;
+      color: var(--text-400);
+      line-height: 1.7;
+    }
+    .email-note strong {
+      color: var(--text-200);
+      font-weight: 500;
+    }
+    .email-note a {
+      display: block;
+      color: var(--text-400);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      margin-top: 2px;
+      font-size: 13px;
+      transition: color 150ms;
+    }
+    .email-note a:hover { color: var(--text-200); }
+
+    /* Required indicator */
+    .required-hint {
+      font-size: 11px;
+      color: var(--text-400);
+      margin-top: -8px;
+      margin-bottom: 16px;
+      text-align: left;
+      max-width: 420px;
+      width: 100%;
+      padding-left: 2px;
+    }
+
+    /* ── Modal overlay ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 1000;
+      align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: var(--bg-200);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      max-width: 560px; width: 100%;
+      max-height: 80vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+    }
+    .modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    .modal-header h2 {
+      font-family: var(--font-serif);
+      font-size: 18px; font-weight: 600; color: var(--text-000);
+    }
+    .modal-close {
+      background: none; border: none;
+      color: var(--text-400); font-size: 20px; cursor: pointer;
+      padding: 4px 8px; border-radius: 6px;
+      transition: background 150ms;
+    }
+    .modal-close:hover { background: var(--border); color: var(--text-100); }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      font-size: 13px; color: var(--text-200); line-height: 1.7;
+    }
+    .modal-body h3 { color: var(--text-100); font-size: 14px; font-weight: 600; margin: 16px 0 6px; }
+    .modal-body h3:first-child { margin-top: 0; }
+    .modal-body ul { padding-left: 18px; margin: 6px 0; }
+    .modal-body li { margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- Brand mark -->
+  <div class="brand-mark">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L20 12L12 22L4 12L12 2Z" fill="hsl(15,63.1%,59.6%)" opacity="0.9"/>
+      <path d="M12 6L17 12L12 18L7 12L12 6Z" fill="hsl(60,2.1%,18.4%)"/>
+    </svg>
+    LawPakAI
+  </div>
+
+  <!-- Heading -->
+  <h1 class="page-title">Let's create your account</h1>
+  <p class="page-sub">A few things for you to review</p>
+
+  <!-- Consent checkboxes -->
+  <div class="consent-card">
+
+    <!-- Checkbox 1 — required -->
+    <label class="consent-row">
+      <input type="checkbox" id="terms" onchange="updateButton()" />
+      <span class="consent-text">
+        I agree to LawPakAI's <a href="#" onclick="event.preventDefault();event.stopPropagation();openModal('terms-modal')">Consumer Terms</a> and <a href="#" onclick="event.preventDefault();event.stopPropagation();openModal('aup-modal')">Acceptable Use Policy</a> and confirm that I am at least 18 years of age.
+      </span>
+    </label>
+
+    <!-- Checkbox 2 — optional -->
+    <label class="consent-row">
+      <input type="checkbox" id="promo" onchange="updateButton()" />
+      <span class="consent-text">
+        Subscribe to occasional promotional emails and notifications. You can opt out any time.
+      </span>
+    </label>
+
+  </div>
+
+  <!-- Required hint -->
+  <p class="required-hint">* First option is required to create an account.</p>
+
+  <!-- Create account button -->
+  <button id="create-btn" class="btn-create" disabled onclick="handleCreate()">
+    Create account
+  </button>
+
+  <!-- Email verification note -->
+  <div class="email-note">
+    <span>Email verified as <strong id="display-email">user@example.com</strong></span>
+    <a href="register.html">Use a different email</a>
+  </div>
+
+</div>
+
+<!-- ── Consumer Terms Modal ── -->
+<div class="modal-overlay" id="terms-modal" onclick="if(event.target===this)closeModal('terms-modal')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Consumer Terms</h2>
+      <button class="modal-close" onclick="closeModal('terms-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3>1. Acceptance of Terms</h3>
+      <p>By accessing or using the LawPakAI platform, you agree to be bound by these Consumer Terms. If you do not agree, do not use the service.</p>
+
+      <h3>2. Eligibility</h3>
+      <p>You must be at least 18 years of age and a resident of Pakistan or an authorized jurisdiction to use LawPakAI. By creating an account, you represent that you meet these requirements.</p>
+
+      <h3>3. Account Responsibilities</h3>
+      <ul>
+        <li>You are responsible for maintaining the confidentiality of your login credentials.</li>
+        <li>You agree to provide accurate, current information during registration.</li>
+        <li>You may not share your account with others or create multiple accounts.</li>
+      </ul>
+
+      <h3>4. Service Description</h3>
+      <p>LawPakAI provides AI-powered legal research assistance. Responses are generated using machine learning models and should not be considered legal advice. Always consult a qualified legal professional for actionable legal decisions.</p>
+
+      <h3>5. Intellectual Property</h3>
+      <p>All content, design, and AI models on LawPakAI are the intellectual property of LawPakAI Technologies. You may not reproduce, distribute, or create derivative works without written permission.</p>
+
+      <h3>6. Limitation of Liability</h3>
+      <p>LawPakAI is provided "as is" without warranties of any kind. We are not liable for any damages arising from your use of the platform, including reliance on AI-generated legal information.</p>
+
+      <h3>7. Termination</h3>
+      <p>We reserve the right to suspend or terminate your account at any time for violation of these terms or misuse of the platform.</p>
+
+      <h3>8. Changes to Terms</h3>
+      <p>We may update these terms from time to time. Continued use of LawPakAI after changes constitutes acceptance of the updated terms.</p>
+
+      <p style="margin-top:16px;color:var(--text-400);font-size:12px;">Last updated: April 2025 &middot; LawPakAI Technologies</p>
+    </div>
+  </div>
+</div>
+
+<!-- ── Acceptable Use Policy Modal ── -->
+<div class="modal-overlay" id="aup-modal" onclick="if(event.target===this)closeModal('aup-modal')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2>Acceptable Use Policy</h2>
+      <button class="modal-close" onclick="closeModal('aup-modal')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <h3>1. Permitted Use</h3>
+      <p>LawPakAI is intended for lawful legal research, education, and professional purposes. You may use the platform to:</p>
+      <ul>
+        <li>Research Pakistani case law, statutes, and legal precedents</li>
+        <li>Generate AI-assisted summaries and analysis of legal documents</li>
+        <li>Prepare legal drafts and documents for professional use</li>
+      </ul>
+
+      <h3>2. Prohibited Activities</h3>
+      <p>You agree NOT to:</p>
+      <ul>
+        <li>Use LawPakAI to provide unauthorized legal advice to third parties</li>
+        <li>Attempt to reverse-engineer, scrape, or extract the AI model or database</li>
+        <li>Submit false, misleading, or fraudulent queries</li>
+        <li>Use the platform for any illegal activity or to facilitate unlawful conduct</li>
+        <li>Harass, abuse, or impersonate other users or LawPakAI staff</li>
+        <li>Circumvent rate limits, security measures, or access controls</li>
+        <li>Share, redistribute, or commercially resell LawPakAI outputs without permission</li>
+      </ul>
+
+      <h3>3. AI Disclaimer</h3>
+      <p>LawPakAI uses artificial intelligence to generate responses. While we strive for high accuracy (98%+), AI-generated content may contain errors. Users must independently verify all citations and legal analysis before relying on them in legal proceedings.</p>
+
+      <h3>4. Data &amp; Privacy</h3>
+      <ul>
+        <li>We do not store your queries or use conversations for AI training.</li>
+        <li>All communication is encrypted in transit.</li>
+        <li>We collect minimal personal data required for account management.</li>
+      </ul>
+
+      <h3>5. Enforcement</h3>
+      <p>Violation of this policy may result in warning, account suspension, or permanent ban. We reserve the right to report illegal activities to law enforcement authorities.</p>
+
+      <p style="margin-top:16px;color:var(--text-400);font-size:12px;">Last updated: April 2025 &middot; LawPakAI Technologies</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Pull email & name from URL params
+  const params = new URLSearchParams(window.location.search);
+  const email = params.get('email');
+  const userName = params.get('name');
+  if (email) document.getElementById('display-email').textContent = email;
+
+  function updateButton() {
+    const termsChecked = document.getElementById('terms').checked;
+    const btn = document.getElementById('create-btn');
+    if (termsChecked) {
+      btn.classList.add('enabled');
+      btn.disabled = false;
+    } else {
+      btn.classList.remove('enabled');
+      btn.disabled = true;
+    }
+  }
+
+  function handleCreate() {
+    // Proceed to pricing page
+    const nameParam = userName ? '&name=' + encodeURIComponent(userName) : '';
+    window.location.href = 'pricing.html?email=' + encodeURIComponent(email || '') + nameParam;
+  }
+
+  // ── Modal open/close ──
+  function openModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+    }
+  });
+</script>
+
+</body>
+</html>

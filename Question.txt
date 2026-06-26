@@ -1,0 +1,56 @@
+Category 1 — Direct Case Lookup
+The system can find complete details of any case using its case ID.
+Examples:
+
+“Tell me about Crl.A.1”
+“What was the final decision in Crl.A.76?”
+“Give me the full details of Criminal Appeal No. 49/2012”
+It provides full case details, including the parties, judge, PPC sections, decision, legal reasoning, and full case text.
+
+Category 2 — Section-Based Questions
+The system can find all cases related to a specific section of the Pakistan Penal Code (PPC).
+Examples:
+
+“Which cases involved Section 302 PPC?”
+“Which cases involved Section 324 PPC?”
+“How does the court interpret Section 302(b)?”
+It shows all relevant cases along with their facts and outcomes.
+
+Category 3 — Person-Based Questions
+The system can find cases involving a specific person, whether they are a petitioner, respondent, or complainant.
+Examples:
+
+“Which cases involved Muhammad Tahir?”
+“Was Gul Hussain the complainant in any case?”
+“Cases involving Zarin Khan”
+It lists all cases where that person is involved and explains their role and the result of the case.
+
+Category 4 — Judge-Based Questions
+The system can find all cases decided by a particular judge.
+Examples:
+
+“Cases heard by Justice Ijaz Ahmed”
+“Which cases were decided by Justice Amir Hani Muslim?”
+It provides summaries and decisions of the cases handled by that judge.
+
+Category 5 — Decision-Based Questions
+The system can filter cases based on the final decision.
+Examples:
+
+“Cases where the appeal was dismissed”
+“Cases where the accused was acquitted”
+“Cases resulting in death sentence”
+“Cases involving conviction”
+It groups and shows cases based on their outcomes.
+
+Category 6 — Analytical / Legal Reasoning Questions
+The system can analyze multiple cases and explain how courts handle specific legal issues.
+Examples:
+
+“How does the court evaluate confessional statements?”
+“How does the court treat delay in FIR?”
+“What legal standard does the court apply for eyewitness testimony?”
+“How does the court decide on bail in murder cases?”
+It explains the legal principles and reasoning used by the courts across different cases.
+
+Note:Category 5 and 6 are still not very much accurate.

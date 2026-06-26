@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="claude" data-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register — LawPakAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --brand: hsl(45, 65%, 53%);
+      --brand-dim: hsl(45, 55%, 45%);
+      --bg-000: hsl(60, 2.1%, 18.4%);
+      --bg-100: hsl(60, 2.7%, 14.5%);
+      --bg-200: hsl(30, 3.3%, 11.8%);
+      --bg-300: hsl(60, 2.6%, 7.6%);
+      --text-000: hsl(48, 33.3%, 97.1%);
+      --text-100: hsl(48, 33.3%, 97.1%);
+      --text-200: hsl(50, 9%, 73.7%);
+      --text-400: hsl(48, 4.8%, 59.2%);
+      --border: hsla(51, 16.5%, 84.5%, 0.12);
+      --border-strong: hsla(51, 16.5%, 84.5%, 0.22);
+      --font-ui: 'Inter', system-ui, sans-serif;
+      --font-serif: 'Lora', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: var(--font-ui);
+      background-color: var(--bg-100);
+      color: var(--text-100);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      scrollbar-width: thin;
+      scrollbar-color: hsla(51, 16.5%, 84.5%, 0.2) transparent;
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-ui); }
+
+    /* ── Top nav ── */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 52px;
+      background: hsla(60, 2.7%, 14.5%, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topnav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-100);
+    }
+    .topnav-logo svg { width: 18px; height: 18px; }
+
+    .topnav-right { display: flex; align-items: center; gap: 10px; }
+
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: var(--text-200);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .btn-ghost:hover { background: var(--border); color: var(--text-100); }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 6px;
+      transition: background 150ms ease, transform 150ms ease;
+    }
+    .btn-primary:hover { background: var(--brand-dim); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(0); }
+
+    /* ── Register page body ── */
+    .page-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 24px 48px;
+    }
+
+    .register-card {
+      background: var(--bg-200);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 460px;
+    }
+
+    .register-card .card-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-100);
+      margin-bottom: 24px;
+    }
+    .register-card .card-logo svg { width: 20px; height: 20px; }
+
+    .register-card h2 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text-000);
+      text-align: center;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .register-card .subtitle {
+      font-size: 13px;
+      color: var(--text-400);
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    /* Form */
+    .form-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex: 1;
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-200);
+      letter-spacing: 0.02em;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      background: var(--bg-000);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      outline: none;
+      padding: 12px 14px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      color: var(--text-100);
+      transition: border-color 150ms;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus { border-color: var(--brand); }
+
+    .form-group input::placeholder { color: var(--text-400); }
+
+    /* Select wrapper for custom arrow */
+    .select-wrap { position: relative; }
+    .select-wrap::after {
+      content: '';
+      pointer-events: none;
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-400);
+    }
+
+    .form-group select option {
+      background: var(--bg-000);
+      color: var(--text-100);
+    }
+
+    /* Register button */
+    .btn-register {
+      width: 100%;
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 150ms, transform 150ms;
+      margin-top: 6px;
+    }
+    .btn-register:hover { background: var(--brand-dim); transform: translateY(-1px); }
+    .btn-register:active { transform: translateY(0); }
+
+    .signin-link {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-400);
+      margin-top: 18px;
+    }
+    .signin-link a {
+      color: var(--brand);
+      font-weight: 500;
+    }
+    .signin-link a:hover { text-decoration: underline; }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 22px 0;
+    }
+
+    .note {
+      font-size: 11px;
+      color: var(--text-400);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* Password strength rules */
+    .pw-rules {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-top: 8px;
+      padding: 10px 12px;
+      background: var(--bg-300);
+      border-radius: 7px;
+    }
+    .pw-rules li {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-400);
+      transition: color 150ms;
+    }
+    .pw-rules li.pass { color: hsl(142, 60%, 50%); }
+    .pw-rules li::before {
+      content: '○';
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+    .pw-rules li.pass::before { content: '✓'; }
+
+    .field-error {
+      font-size: 11px;
+      color: hsl(0, 70%, 65%);
+      margin-top: 4px;
+      display: none;
+    }
+    .field-error.show { display: block; }
+
+    /* Typewriter reveal */
+    .tw-line {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 0;
+      vertical-align: bottom;
+      animation: tw-type var(--tw-duration, 1.6s) linear var(--tw-delay, 0s) forwards;
+      will-change: width;
+    }
+    @keyframes tw-type { to { width: 100%; } }
+    .tw-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--brand, hsl(45,65%,53%));
+      border-radius: 1px;
+      margin-left: 4px;
+      vertical-align: -0.08em;
+      opacity: 0;
+      animation: tw-blink 0.9s steps(1) var(--tw-cursor-delay, 0s) infinite;
+    }
+    @keyframes tw-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Top Nav ── -->
+<nav class="topnav">
+  <a href="index.html" class="topnav-logo">
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L20 12L12 22L4 12L12 2Z" fill="hsl(45,65%,53%)" opacity="0.9"/>
+      <path d="M12 6L17 12L12 18L7 12L12 6Z" fill="hsl(60,2.1%,18.4%)"/>
+    </svg>
+    LawPakAI
+  </a>
+
+  <div class="topnav-right">
+    <button class="btn-ghost" onclick="window.location.href='index.html'">How it works</button>
+    <button class="btn-ghost">Plans</button>
+    <button class="btn-ghost">FAQ</button>
+    <button class="btn-ghost" onclick="window.location.href='index.html'">Login</button>
+    <button class="btn-primary">Sign up for free</button>
+  </div>
+</nav>
+
+<!-- ── Register Card ── -->
+<div class="page-wrap">
+  <div class="register-card">
+
+    <!-- Logo -->
+    <div class="card-logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L20 12L12 22L4 12L12 2Z" fill="hsl(45,65%,53%)" opacity="0.9"/>
+        <path d="M12 6L17 12L12 18L7 12L12 6Z" fill="hsl(60,2.1%,18.4%)"/>
+      </svg>
+      LawPakAI
+    </div>
+
+    <h2 data-typewriter data-tw-delay="0.1">Create your account</h2>
+    <p class="subtitle">Join Pakistan's AI legal research community</p>
+
+    <div class="divider"></div>
+
+    <!-- Form -->
+    <form onsubmit="handleRegister(event)">
+
+      <!-- First + Last name -->
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first-name">First Name</label>
+          <input type="text" id="first-name" placeholder="e.g. Ayesha" autocomplete="given-name" />
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last Name</label>
+          <input type="text" id="last-name" placeholder="e.g. Raza" autocomplete="family-name" />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" placeholder="you@example.com" autocomplete="email" />
+      </div>
+
+      <!-- Designation -->
+      <div class="form-group">
+        <label for="designation">Designation</label>
+        <div class="select-wrap">
+          <select id="designation">
+            <option value="" disabled selected>Select your role</option>
+            <option value="student">Student</option>
+            <option value="lawyer">Lawyer</option>
+            <option value="judge">Judge</option>
+            <option value="prefer-not">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Create a password" autocomplete="new-password" oninput="checkPassword()" />
+        <ul class="pw-rules" id="pw-rules">
+          <li id="rule-len">At least 8 characters</li>
+          <li id="rule-upper">At least one uppercase letter (A–Z)</li>
+          <li id="rule-special">At least one special character (!@#$%^&* etc.)</li>
+        </ul>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirm-password">Confirm Password</label>
+        <input type="password" id="confirm-password" placeholder="Repeat your password" autocomplete="new-password" oninput="checkConfirm()" />
+        <span class="field-error" id="confirm-error">Passwords do not match.</span>
+      </div>
+
+      <!-- Register button -->
+      <button type="submit" class="btn-register">Create Account</button>
+
+    </form>
+
+    <p class="signin-link">
+      Already have an account? <a href="index.html">Sign in</a>
+    </p>
+
+    <div class="divider"></div>
+    <p class="note">By registering you agree to our Terms of Service and Privacy Policy.<br/>Your data is encrypted and never shared.</p>
+
+  </div>
+</div>
+
+<script>
+  function checkPassword() {
+    const val = document.getElementById('password').value;
+    toggle('rule-len',     val.length >= 8);
+    toggle('rule-upper',   /[A-Z]/.test(val));
+    toggle('rule-special', /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(val));
+    checkConfirm();
+  }
+
+  function toggle(id, pass) {
+    document.getElementById(id).classList.toggle('pass', pass);
+  }
+
+  function checkConfirm() {
+    const pw  = document.getElementById('password').value;
+    const cpw = document.getElementById('confirm-password').value;
+    const err = document.getElementById('confirm-error');
+    if (cpw && pw !== cpw) {
+      err.classList.add('show');
+    } else {
+      err.classList.remove('show');
+    }
+  }
+
+  function isPasswordValid(pw) {
+    return pw.length >= 8 && /[A-Z]/.test(pw) && /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pw);
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    const first = document.getElementById('first-name').value.trim();
+    const pw    = document.getElementById('password').value;
+    const cpw   = document.getElementById('confirm-password').value;
+
+    if (!first || !email) {
+      alert('Please fill in your name and email.');
+      return;
+    }
+    if (!isPasswordValid(pw)) {
+      alert('Password must be at least 8 characters, contain one uppercase letter, and one special character.');
+      return;
+    }
+    if (pw !== cpw) {
+      document.getElementById('confirm-error').classList.add('show');
+      return;
+    }
+    // Check if user already exists
+    const users = JSON.parse(localStorage.getItem('lawpak_users') || '[]');
+    const emailLower = email.toLowerCase();
+    if (users.find(u => u.email.toLowerCase() === emailLower)) {
+      alert('An account with this email already exists. Please login instead.');
+      window.location.href = 'index.html';
+      return;
+    }
+
+    // Add to registered users list
+    users.push({ name: first, email: email, password: pw });
+    localStorage.setItem('lawpak_users', JSON.stringify(users));
+
+    // Set current session
+    localStorage.setItem('lawpak_user', JSON.stringify({ name: first, email: email }));
+
+    // Also register with backend to obtain a JWT for document features
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailLower, password: pw, full_name: first }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        sessionStorage.setItem('lawpakai_auth', JSON.stringify({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token || null,
+          user: { email: emailLower, name: first },
+        }));
+      }
+    } catch (_) { /* backend offline — registration still works locally */ }
+
+    window.location.href = 'create-account.html?email=' + encodeURIComponent(email) + '&name=' + encodeURIComponent(first);
+  }
+</script>
+
+<script>
+/* Typewriter reveal for [data-typewriter] headings */
+(function () {
+  function initTypewriter(root) {
+    const els = (root || document).querySelectorAll('[data-typewriter]:not([data-tw-init])');
+    els.forEach((el) => {
+      el.setAttribute('data-tw-init', '1');
+      const startDelay = parseFloat(el.dataset.twDelay || '0');
+      const lines = el.innerHTML.split(/<br\s*\/?>/i);
+      el.innerHTML = '';
+      let t = startDelay;
+      lines.forEach((html, idx) => {
+        if (idx > 0) el.appendChild(document.createElement('br'));
+        const span = document.createElement('span');
+        span.className = 'tw-line';
+        span.innerHTML = html;
+        const textLen = (span.textContent || '').trim().length || 1;
+        const dur = Math.max(0.6, Math.min(2.2, textLen * 0.06));
+        span.style.setProperty('--tw-duration', dur + 's');
+        span.style.setProperty('--tw-delay', t + 's');
+        el.appendChild(span);
+        t += dur;
+      });
+      const cursor = document.createElement('span');
+      cursor.className = 'tw-cursor';
+      cursor.style.setProperty('--tw-cursor-delay', t + 's');
+      el.appendChild(cursor);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initTypewriter());
+  } else {
+    initTypewriter();
+  }
+})();
+</script>
+
+</body>
+</html>

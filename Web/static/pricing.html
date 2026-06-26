@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="claude" data-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Plans — LawPakAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --brand:        hsl(45, 65%, 53%);
+      --brand-dim:    hsl(45, 65%, 53%);
+      --pro-accent:   hsl(251, 40.2%, 54.1%);
+      --pro-accent-dim: hsl(251, 34.2%, 33.3%);
+      --pro-accent-light: hsl(251, 84.6%, 74.5%);
+      --bg-000:       hsl(60, 2.1%, 18.4%);
+      --bg-100:       hsl(60, 2.7%, 14.5%);
+      --bg-200:       hsl(30, 3.3%, 11.8%);
+      --bg-300:       hsl(60, 2.6%,  7.6%);
+      --text-000:     hsl(48, 33.3%, 97.1%);
+      --text-100:     hsl(48, 33.3%, 97.1%);
+      --text-200:     hsl(50,  9%,   73.7%);
+      --text-400:     hsl(48,  4.8%, 59.2%);
+      --border:       hsla(51, 16.5%, 84.5%, 0.12);
+      --border-strong: hsla(51, 16.5%, 84.5%, 0.22);
+      --font-ui:      'Inter', system-ui, sans-serif;
+      --font-serif:   'Lora', Georgia, serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      font-family: var(--font-ui);
+      background-color: var(--bg-100);
+      color: var(--text-100);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      scrollbar-width: thin;
+      scrollbar-color: hsla(51,16.5%,84.5%,0.2) transparent;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-ui); }
+
+    /* ── Nav ── */
+    .topnav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 52px;
+      background: hsla(60, 2.7%, 14.5%, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .topnav-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 14px; font-weight: 600; color: var(--text-100);
+    }
+    .topnav-logo svg { width: 18px; height: 18px; }
+    .btn-ghost {
+      background: transparent; border: none;
+      color: var(--text-200); font-size: 13px; font-weight: 500;
+      padding: 6px 12px; border-radius: 6px;
+      transition: background 150ms, color 150ms;
+    }
+    .btn-ghost:hover { background: var(--border); color: var(--text-100); }
+
+    /* ── Page ── */
+    .page-wrap {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 80px 24px 48px;
+    }
+
+    /* ── Heading ── */
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 600;
+      color: var(--text-000);
+      letter-spacing: -0.02em;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    /* ── Billing toggle ── */
+    .billing-toggle {
+      display: inline-flex;
+      align-items: center;
+      background: var(--bg-200);
+      border: 1px solid var(--border-strong);
+      border-radius: 100px;
+      padding: 4px;
+      gap: 2px;
+      margin-bottom: 40px;
+    }
+    .toggle-btn {
+      background: transparent; border: none;
+      font-size: 13px; font-weight: 500; color: var(--text-400);
+      padding: 6px 16px; border-radius: 100px;
+      transition: background 150ms, color 150ms;
+      display: flex; align-items: center; gap-6px;
+    }
+    .toggle-btn.active {
+      background: var(--bg-000);
+      color: var(--text-100);
+    }
+    .save-badge {
+      display: inline-block;
+      background: hsl(97, 59.1%, 46.1%);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 100px;
+      margin-left: 6px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Cards grid ── */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 880px;
+      width: 100%;
+    }
+
+    @media (max-width: 720px) {
+      .plans-grid { grid-template-columns: 1fr; max-width: 420px; }
+    }
+
+    /* ── Plan card base ── */
+    .plan-card {
+      background: var(--bg-200);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 26px 22px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      transition: border-color 200ms;
+    }
+    .plan-card:hover { border-color: hsla(51, 16.5%, 84.5%, 0.35); }
+
+    /* Pro card highlight */
+    .plan-card.pro {
+      border-color: hsla(251, 40.2%, 54.1%, 0.5);
+      background: linear-gradient(160deg, hsl(251,25%,13%) 0%, var(--bg-200) 100%);
+    }
+    .plan-card.pro:hover { border-color: hsla(251, 40.2%, 54.1%, 0.75); }
+
+    /* ── Plan icon ── */
+    .plan-icon {
+      width: 32px; height: 32px;
+      margin-bottom: 14px;
+    }
+
+    /* Max icon — layered diamond */
+    .icon-max { color: var(--text-200); }
+    /* Pro icon — purple diamond */
+    .icon-pro { color: var(--pro-accent-light); }
+    /* Free icon — brand clay */
+    .icon-free { color: var(--brand); }
+
+    /* ── Plan name ── */
+    .plan-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-100);
+      margin-bottom: 4px;
+    }
+
+    /* ── Recommended badge ── */
+    .rec-badge {
+      position: absolute;
+      top: 18px; right: 18px;
+      background: var(--pro-accent-dim);
+      color: var(--pro-accent-light);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 100px;
+    }
+
+    /* ── Price ── */
+    .plan-price-wrap { margin: 16px 0 6px; }
+    .plan-from {
+      font-size: 11px;
+      color: var(--text-400);
+      margin-bottom: 2px;
+    }
+    .plan-price {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--text-000);
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+    .plan-price sub {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-400);
+      vertical-align: baseline;
+      letter-spacing: 0;
+    }
+    .plan-price-note {
+      font-size: 11px;
+      color: var(--text-400);
+      margin-top: 4px;
+    }
+
+    /* ── CTA button ── */
+    .plan-cta {
+      width: 100%;
+      border-radius: 8px;
+      padding: 11px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      margin: 18px 0 20px;
+      transition: background 150ms, transform 150ms, opacity 150ms;
+    }
+    .plan-cta:hover { transform: translateY(-1px); }
+    .plan-cta:active { transform: translateY(0); }
+
+    .plan-cta.max-cta {
+      background: var(--bg-000);
+      color: var(--text-100);
+      border: 1px solid var(--border-strong);
+    }
+    .plan-cta.max-cta:hover { background: var(--border); }
+
+    .plan-cta.pro-cta {
+      background: var(--pro-accent);
+      color: #fff;
+    }
+    .plan-cta.pro-cta:hover { background: var(--pro-accent-dim); }
+
+    .plan-cta.free-cta {
+      background: var(--bg-000);
+      color: var(--text-100);
+      border: 1px solid var(--border-strong);
+    }
+    .plan-cta.free-cta:hover { background: var(--border); }
+
+    /* ── Divider in card ── */
+    .card-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 16px;
+    }
+
+    /* ── Feature list ── */
+    .feature-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-400);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-200);
+      line-height: 1.45;
+    }
+
+    .feature-item svg {
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .check-max { color: var(--text-400); }
+    .check-pro { color: var(--pro-accent-light); }
+    .check-free { color: var(--brand); }
+
+    /* ── Footer note ── */
+    .pricing-note {
+      font-size: 11px;
+      color: var(--text-400);
+      margin-top: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav class="topnav">
+  <a href="index.html" class="topnav-logo">
+    <svg viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L20 12L12 22L4 12L12 2Z" fill="hsl(45,65%,53%)" opacity="0.9"/>
+      <path d="M12 6L17 12L12 18L7 12L12 6Z" fill="hsl(60,2.1%,18.4%)"/>
+    </svg>
+    LawPakAI
+  </a>
+  <div style="display:flex;gap:8px;">
+    <button class="btn-ghost" onclick="window.location.href='chat.html'">Sign in</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <h1 class="page-title">Plans that grow with you</h1>
+
+  <!-- Billing toggle -->
+  <div class="billing-toggle">
+    <button class="toggle-btn" id="monthly-btn" onclick="setBilling('monthly')">Monthly</button>
+    <button class="toggle-btn active" id="yearly-btn" onclick="setBilling('yearly')">
+      Yearly <span class="save-badge">Save 25%</span>
+    </button>
+  </div>
+
+  <!-- Plans grid -->
+  <div class="plans-grid">
+
+    <!-- ── MAX ── -->
+    <div class="plan-card max">
+      <!-- Icon -->
+      <svg class="plan-icon icon-max" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L28 16L16 29L4 16L16 3Z" fill="currentColor" opacity="0.15"/>
+        <path d="M16 3L28 16L16 29L4 16L16 3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M16 9L23 16L16 23L9 16L16 9Z" fill="currentColor" opacity="0.4"/>
+      </svg>
+
+      <div class="plan-name">Max</div>
+
+      <div class="plan-price-wrap">
+        <p class="plan-from">From</p>
+        <div class="plan-price">
+          <span id="max-price">Rs. 2,700</span>
+          <sub id="max-per">/month</sub>
+        </div>
+        <p class="plan-price-note" id="max-note">Billed annually · Rs. 32,400/yr</p>
+      </div>
+
+      <button class="plan-cta max-cta" onclick="choosePlan('max')">Get Max plan</button>
+
+      <div class="card-divider"></div>
+      <p class="feature-label">Everything in Pro, plus</p>
+      <ul class="feature-list">
+        <li class="feature-item">
+          <svg class="check-max" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Extended usage limits on all models
+        </li>
+        <li class="feature-item">
+          <svg class="check-max" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Priority access during high-traffic times
+        </li>
+        <li class="feature-item">
+          <svg class="check-max" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Deeper analysis and complex research
+        </li>
+        <li class="feature-item">
+          <svg class="check-max" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Dedicated support channel
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── PRO ── -->
+    <div class="plan-card pro">
+      <span class="rec-badge">Recommended</span>
+
+      <!-- Icon -->
+      <svg class="plan-icon icon-pro" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L28 16L16 29L4 16L16 3Z" fill="currentColor" opacity="0.2"/>
+        <path d="M16 3L28 16L16 29L4 16L16 3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+        <path d="M16 9L23 16L16 23L9 16L16 9Z" fill="currentColor" opacity="0.6"/>
+      </svg>
+
+      <div class="plan-name" style="color: var(--pro-accent-light);">Pro</div>
+
+      <div class="plan-price-wrap">
+        <div class="plan-price">
+          <span id="pro-price">Rs. 1,200</span>
+          <sub id="pro-per">/month</sub>
+        </div>
+        <p class="plan-price-note" id="pro-note">Billed annually · Rs. 14,400/yr</p>
+      </div>
+
+      <button class="plan-cta pro-cta" onclick="choosePlan('pro')">Get Pro plan</button>
+
+      <div class="card-divider"></div>
+      <p class="feature-label">Everything in Free, plus</p>
+      <ul class="feature-list">
+        <li class="feature-item">
+          <svg class="check-pro" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Unlimited AI legal research queries
+        </li>
+        <li class="feature-item">
+          <svg class="check-pro" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Access to 50,000+ Pakistani court cases
+        </li>
+        <li class="feature-item">
+          <svg class="check-pro" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          AI document drafting (petitions, contracts)
+        </li>
+        <li class="feature-item">
+          <svg class="check-pro" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Urdu + English bilingual support
+        </li>
+        <li class="feature-item">
+          <svg class="check-pro" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Full PLD, SCMR &amp; statute citations
+        </li>
+        <li class="feature-item">
+          <svg class="check-pro" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Community forum access
+        </li>
+      </ul>
+    </div>
+
+    <!-- ── FREE ── -->
+    <div class="plan-card free">
+      <!-- Icon -->
+      <svg class="plan-icon icon-free" viewBox="0 0 32 32" fill="none">
+        <path d="M16 3L28 16L16 29L4 16L16 3Z" fill="currentColor" opacity="0.12"/>
+        <path d="M16 3L28 16L16 29L4 16L16 3Z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+      </svg>
+
+      <div class="plan-name">Free</div>
+
+      <div class="plan-price-wrap">
+        <div class="plan-price">
+          Rs. 0
+          <sub>/month</sub>
+        </div>
+        <p class="plan-price-note">No credit card required</p>
+      </div>
+
+      <button class="plan-cta free-cta" onclick="choosePlan('free')">Use LawPakAI for free</button>
+
+      <div class="card-divider"></div>
+      <p class="feature-label">Included for free</p>
+      <ul class="feature-list">
+        <li class="feature-item">
+          <svg class="check-free" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          20 AI research queries per day
+        </li>
+        <li class="feature-item">
+          <svg class="check-free" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Access to case summaries &amp; statutes
+        </li>
+        <li class="feature-item">
+          <svg class="check-free" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Basic Urdu &amp; English queries
+        </li>
+        <li class="feature-item">
+          <svg class="check-free" width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8l3.5 3.5L13 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Connect with LawPakAI community
+        </li>
+      </ul>
+    </div>
+
+  </div><!-- /plans-grid -->
+
+  <p class="pricing-note">* Prices are in Pakistani Rupees (PKR) and include applicable taxes.</p>
+
+</div><!-- /page-wrap -->
+
+<script>
+  let billing = 'yearly';
+
+  const prices = {
+    yearly:  { max: 'Rs. 2,700', maxNote: 'Billed annually · Rs. 32,400/yr', pro: 'Rs. 1,200', proNote: 'Billed annually · Rs. 14,400/yr' },
+    monthly: { max: 'Rs. 3,600', maxNote: 'Billed monthly',                  pro: 'Rs. 1,600', proNote: 'Billed monthly' }
+  };
+
+  function setBilling(type) {
+    billing = type;
+    document.getElementById('monthly-btn').classList.toggle('active', type === 'monthly');
+    document.getElementById('yearly-btn').classList.toggle('active', type === 'yearly');
+
+    const p = prices[type];
+    document.getElementById('max-price').textContent = p.max;
+    document.getElementById('max-note').textContent  = p.maxNote;
+    document.getElementById('pro-price').textContent = p.pro;
+    document.getElementById('pro-note').textContent  = p.proNote;
+
+    document.getElementById('max-per').textContent = '/month';
+    document.getElementById('pro-per').textContent = '/month';
+  }
+
+  // ── Plan selection → save login & go to chat ──
+  function choosePlan(plan) {
+    const user = JSON.parse(localStorage.getItem('lawpak_user') || 'null');
+    const params = new URLSearchParams(window.location.search);
+    const name = (user && user.name) || params.get('name') || 'User';
+    if (user) {
+      user.plan = plan;
+      localStorage.setItem('lawpak_user', JSON.stringify(user));
+      // Also persist plan on the registry entry so it survives logout/login
+      const users = JSON.parse(localStorage.getItem('lawpak_users') || '[]');
+      const idx = users.findIndex(u => (u.email || '').toLowerCase() === (user.email || '').toLowerCase());
+      if (idx >= 0) {
+        users[idx].plan = plan;
+        localStorage.setItem('lawpak_users', JSON.stringify(users));
+      }
+    }
+    window.location.href = 'chat.html?name=' + encodeURIComponent(name);
+  }
+</script>
+
+</body>
+</html>

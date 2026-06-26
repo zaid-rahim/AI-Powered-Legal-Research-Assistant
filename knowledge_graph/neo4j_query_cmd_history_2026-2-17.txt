@@ -1,0 +1,51 @@
+MATCH (c:Case {id:"Crl.A.1"})
+OPTIONAL MATCH (c)-[r]->(n)
+RETURN c, r, n;
+
+
+MATCH (c:Case {id:"Crl.A.1"})
+-[:HAS_SUMMARY]->(s:Summary)
+RETURN s.text;
+
+
+MATCH (c:Case)
+RETURN count(c);
+
+
+MATCH (j:Judge)<-[:HEARD_BY]-(c:Case)
+RETURN j.name, count(c) AS total_cases
+ORDER BY total_cases DESC;
+
+
+MATCH (c:Case)-[:HAS_DECISION]->(d:Decision)
+WHERE d.value CONTAINS "Dismissed"
+RETURN c.id;
+
+
+MATCH (c:Case)-[:INVOLVES_SECTION]->(s:Section {name:"Section 302 PPC"})
+RETURN c.id;
+
+MATCH (c:Case {id:"Crl.A.1"})
+OPTIONAL MATCH (c)-[:HAS_CASE_NO]->(cn:CaseNumber)
+OPTIONAL MATCH (c)-[:HEARD_BY]->(j:Judge)
+OPTIONAL MATCH (c)-[:HAS_PETITIONER]->(p:Petitioner)
+OPTIONAL MATCH (c)-[:HAS_RESPONDENT]->(r:Respondent)
+OPTIONAL MATCH (c)-[:INVOLVES_SECTION]->(s:Section)
+OPTIONAL MATCH (c)-[:HAS_DECISION]->(d:Decision)
+OPTIONAL MATCH (c)-[:HAS_SUMMARY]->(sum:Summary)
+RETURN 
+c.id AS CaseID,
+cn.value AS CaseNumber,
+collect(DISTINCT j.name) AS Judges,
+collect(DISTINCT p.name) AS Petitioners,
+collect(DISTINCT r.name) AS Respondents,
+collect(DISTINCT s.name) AS Sections,
+d.value AS Decision,
+sum.text AS Summary;
+
+
+CALL db.labels();
+
+
+CALL db.relationshipTypes();
+

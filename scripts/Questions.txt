@@ -1,0 +1,59 @@
+Background Questions
+
+What crime was Imran Mehmood accused of in Crl.A.1?
+Who were the victims mentioned in Crl.A.1?
+When did the incident in Crl.A.1 take place?
+Where was Imran Mehmood when the incident of Crl.A.1 happened?
+
+Parties Involved
+
+Who was the complainant in Crl.A.1?
+Who were the prosecution witnesses in Crl.A.1?
+Who was the appellant in Crl.A.1?
+
+Key Facts
+
+What weapon was recovered in Crl.A.1?
+What were the “crime empties” found in Crl.A.1?
+What were the dowry articles mentioned in Crl.A.1?
+Did medical evidence support the prosecution in Crl.A.1?
+Was there any confessional statement considered in Crl.A.1?
+
+Legal Issues
+
+What legal issues were raised in the appeal of Crl.A.1?
+Did the court find contradictions in the witness statements in Crl.A.1?
+Was the confessional statement voluntary in Crl.A.1?
+Did the court discuss motive in Crl.A.1?
+
+Arguments
+
+What did the defense argue in Crl.A.1?
+What did the prosecution argue in Crl.A.1?
+Why did the defense say eyewitnesses were unreliable in Crl.A.1?
+Why did the prosecution say the ocular evidence was enough in Crl.A.1?
+
+Court Reasoning
+
+How did the court view the testimonies in Crl.A.1?
+Why did the court trust the prosecution’s evidence in Crl.A.1?
+Did the court believe the motive was proved in Crl.A.1?
+
+Final Decision
+
+What was the final decision in Crl.A.1?
+What sentence was upheld in Crl.A.1?
+Did the court dismiss the appeal in Crl.A.1?
+What punishment did Imran Mehmood receive in Crl.A.1?
+
+QUERY:
+MATCH (c:Case {case_id: "Crl.A.97"})-[r:HAS_JUDGE]->(j)
+RETURN c, r, j;
+
+Who was the Judge in Crl.A.97?
+
+Important:
+
+Criminal Appeal No.52/2009
+
+Discuss Criminal Appeal No. 55/2009

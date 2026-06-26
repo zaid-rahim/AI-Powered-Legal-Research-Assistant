@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="claude" data-mode="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LawPakAI — Pak AI Legal Research Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Claude-style design token system  */
+    :root {
+      /* brand */
+      --brand: hsl(45, 65%, 53%);
+      --brand-dim: hsla(45, 65%, 53%);
+
+      /* backgrounds – dark mode */
+      --bg-000: hsl(60, 2.1%, 18.4%);
+      --bg-100: hsl(60, 2.7%, 14.5%);
+      --bg-200: hsl(30, 3.3%, 11.8%);
+      --bg-300: hsl(60, 2.6%, 7.6%);
+
+      /* text – dark mode */
+      --text-000: hsl(48, 33.3%, 97.1%);
+      --text-100: hsl(48, 33.3%, 97.1%);
+      --text-200: hsl(50, 9%, 73.7%);
+      --text-400: hsl(48, 4.8%, 59.2%);
+
+      /* border */
+      --border: hsla(51, 16.5%, 84.5%, 0.12);
+      --border-strong: hsla(51, 16.5%, 84.5%, 0.22);
+
+      /* font */
+      --font-ui: 'Inter', system-ui, sans-serif;
+      --font-serif: 'Lora', Georgia, serif;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      font-family: var(--font-ui);
+      background-color: var(--bg-100);
+      color: var(--text-100);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      scrollbar-width: thin;
+      scrollbar-color: hsla(51, 16.5%, 84.5%, 0.2) transparent;
+    }
+
+    /* ── Utilities ────── */
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; font-family: var(--font-ui); }
+    img { display: block; }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .container-wide {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Top nav ────────── */
+    .topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 52px;
+      background: hsla(60, 2.7%, 14.5%, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topnav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-100);
+    }
+
+    .topnav-logo svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: none;
+      color: var(--text-200);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 6px 12px;
+      border-radius: 6px;
+      transition: background 150ms ease, color 150ms ease;
+    }
+    .btn-ghost:hover {
+      background: var(--border);
+      color: var(--text-100);
+    }
+
+    .btn-primary {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 16px;
+      border-radius: 6px;
+      transition: background 150ms ease, transform 150ms ease;
+    }
+    .btn-primary:hover {
+      background: var(--brand-dim);
+      transform: translateY(-1px);
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-200);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 10px 22px;
+      border-radius: 7px;
+      transition: background 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .btn-outline:hover {
+      background: var(--border);
+      border-color: var(--border-strong);
+      color: var(--text-100);
+    }
+
+    /* ── Hero ────────── */
+    .hero {
+      padding: 120px 24px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero > .container {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Spiral background canvas — sits behind hero content */
+    .hero-spiral {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.55;
+      /* Fade the center a touch so the headline stays readable */
+      -webkit-mask-image: radial-gradient(ellipse 55% 45% at 50% 42%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 45%, #000 75%);
+              mask-image: radial-gradient(ellipse 55% 45% at 50% 42%, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.85) 45%, #000 75%);
+    }
+
+    .hero h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--text-000);
+      margin-bottom: 16px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--brand);
+    }
+
+    /* ── Typewriter effect (shared) ────── */
+    .tw-line {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      width: 0;
+      vertical-align: bottom;
+      animation: tw-type var(--tw-duration, 1.6s) linear var(--tw-delay, 0s) forwards;
+      will-change: width;
+    }
+    @keyframes tw-type { to { width: 100%; } }
+    .tw-cursor {
+      display: inline-block;
+      width: 3px;
+      height: 0.85em;
+      background: var(--brand);
+      border-radius: 1px;
+      margin-left: 4px;
+      vertical-align: -0.08em;
+      opacity: 0;
+      animation: tw-blink 0.9s steps(1) var(--tw-cursor-delay, 0s) infinite;
+    }
+    @keyframes tw-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-200);
+      max-width: 480px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    /* Email signup */
+    .email-form {
+      display: flex;
+      flex-direction: column;
+      max-width: 420px;
+      margin: 0 auto 14px;
+      gap: 10px;
+    }
+
+    .email-form input {
+      width: 100%;
+      background: var(--bg-000);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      outline: none;
+      padding: 13px 16px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      color: var(--text-100);
+      transition: border-color 150ms;
+    }
+    .email-form input:focus { border-color: var(--brand); }
+    .email-form input::placeholder { color: var(--text-400); }
+
+    .email-form button {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 13px 18px;
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 600;
+      width: 100%;
+      cursor: pointer;
+      transition: background 150ms;
+    }
+    .email-form button:hover { background: var(--brand-dim); }
+
+    .hero-note {
+      font-size: 12px;
+      color: var(--text-400);
+    }
+
+    /* ── Section separator ───────────────── */
+    .sep {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── "Meet LawPakAI" section ──────────── */
+    .meet {
+      padding: 72px 24px;
+      text-align: center;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-400);
+      margin-bottom: 20px;
+    }
+
+    .meet h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 600;
+      color: var(--text-000);
+      line-height: 1.2;
+      max-width: 560px;
+      margin: 0 auto 16px;
+    }
+
+    .meet p {
+      font-size: 15px;
+      color: var(--text-200);
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    /* Chat preview card */
+    .chat-card {
+      background: var(--bg-200);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      max-width: 620px;
+      margin: 0 auto 40px;
+      text-align: left;
+    }
+
+    .chat-card-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-card-header img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .chat-card-header-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-100);
+    }
+
+    .chat-card-header-sub {
+      font-size: 11px;
+      color: var(--text-400);
+    }
+
+    .chat-messages {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg-user {
+      align-self: flex-end;
+      background: hsla(15, 63.1%, 59.6%, 0.15);
+      border: 1px solid hsla(15, 63.1%, 59.6%, 0.2);
+      border-radius: 10px 10px 2px 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: var(--text-100);
+      max-width: 80%;
+    }
+
+    .msg-ai {
+      align-self: flex-start;
+      background: var(--bg-000);
+      border: 1px solid var(--border);
+      border-radius: 2px 10px 10px 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text-200);
+      max-width: 90%;
+      line-height: 1.65;
+    }
+
+    .msg-ai strong { color: var(--text-100); }
+
+    .cite-tag {
+      display: inline-block;
+      background: hsla(15, 63.1%, 59.6%, 0.12);
+      border: 1px solid hsla(15, 63.1%, 59.6%, 0.25);
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 100px;
+      margin-top: 8px;
+    }
+
+    /* Feature pills */
+    .feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--bg-000);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 16px;
+      font-size: 13px;
+      color: var(--text-200);
+      transition: border-color 200ms, color 200ms;
+      cursor: default;
+    }
+    .pill:hover {
+      border-color: var(--border-strong);
+      color: var(--text-100);
+    }
+
+    .pill-icon {
+      width: 16px;
+      height: 16px;
+      opacity: 0.6;
+    }
+
+    /* ── Plans section ─ */
+    .plans {
+      padding: 80px 24px;
+    }
+
+    .plans-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .plans-header h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(24px, 4vw, 34px);
+      font-weight: 600;
+      color: var(--text-000);
+      margin-bottom: 10px;
+    }
+
+    .plans-header p {
+      font-size: 14px;
+      color: var(--text-200);
+    }
+
+    /* Plan tabs */
+    .plan-tabs {
+      display: flex;
+      gap: 0;
+      background: var(--bg-200);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 4px;
+      width: fit-content;
+      margin: 0 auto 40px;
+    }
+
+    .plan-tab {
+      background: transparent;
+      border: none;
+      padding: 7px 18px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-400);
+      transition: background 150ms, color 150ms;
+    }
+    .plan-tab.active {
+      background: var(--bg-000);
+      color: var(--text-100);
+    }
+    .plan-tab:hover:not(.active) { color: var(--text-200); }
+
+    /* Plan grid */
+    .plan-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .plan-card {
+      background: var(--bg-200);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .plan-card.featured {
+      border-color: var(--brand);
+      background: hsla(15, 63.1%, 59.6%, 0.05);
+    }
+
+    .plan-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-200);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .plan-price {
+      font-family: var(--font-serif);
+      font-size: 32px;
+      font-weight: 600;
+      color: var(--text-000);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .plan-price span {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--text-400);
+    }
+
+    .plan-desc {
+      font-size: 13px;
+      color: var(--text-400);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .plan-btn {
+      width: 100%;
+      padding: 10px;
+      border-radius: 7px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 24px;
+      transition: background 150ms, opacity 150ms;
+    }
+
+    .plan-btn-brand {
+      background: var(--brand);
+      color: #fff;
+      border: none;
+    }
+    .plan-btn-brand:hover { background: var(--brand-dim); }
+
+    .plan-btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-200);
+    }
+    .plan-btn-outline:hover {
+      background: var(--border);
+      color: var(--text-100);
+    }
+
+    .plan-divider {
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 20px;
+    }
+
+    .plan-features-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-400);
+      margin-bottom: 14px;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 13px;
+      color: var(--text-200);
+      line-height: 1.4;
+    }
+
+    .plan-features li::before {
+      content: '';
+      width: 14px;
+      height: 14px;
+      min-width: 14px;
+      margin-top: 1px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3 8l3.5 3.5L13 4.5' stroke='%23D4785A' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    /* ── FAQ ───────── */
+    .faq {
+      padding: 80px 24px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .faq h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 3.5vw, 30px);
+      font-weight: 600;
+      color: var(--text-000);
+      margin-bottom: 32px;
+    }
+
+    .faq-item {
+      border-top: 1px solid var(--border);
+    }
+
+    .faq-item:last-child {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .faq-q {
+      width: 100%;
+      background: transparent;
+      border: none;
+      text-align: left;
+      padding: 18px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-100);
+      cursor: pointer;
+      transition: color 150ms;
+    }
+
+    .faq-q:hover { color: var(--text-000); }
+
+    .faq-chevron {
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      color: var(--text-400);
+      transition: transform 200ms ease;
+    }
+
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+
+    .faq-a {
+      display: none;
+      padding-bottom: 18px;
+      font-size: 14px;
+      color: var(--text-200);
+      line-height: 1.7;
+    }
+
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── Footer ────── */
+    footer {
+      background: var(--bg-200);
+      border-top: 1px solid var(--border);
+      padding: 56px 24px 32px;
+    }
+
+    .footer-grid {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.5fr repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 48px;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    .footer-brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-100);
+      margin-bottom: 12px;
+    }
+
+    .footer-brand-logo img { width: 28px; height: 28px; border-radius: 4px; }
+
+    .footer-tagline {
+      font-size: 13px;
+      color: var(--text-400);
+      line-height: 1.6;
+      max-width: 220px;
+    }
+
+    .footer-col-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-400);
+      margin-bottom: 14px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--text-400);
+      transition: color 150ms;
+    }
+    .footer-links a:hover { color: var(--text-100); }
+
+    .footer-bottom {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom a {
+      font-size: 12px;
+      color: var(--text-400);
+      transition: color 150ms;
+    }
+    .footer-bottom a:hover { color: var(--text-200); }
+
+    .footer-copyright {
+      font-size: 12px;
+      color: var(--text-400);
+    }
+
+    /* Social icons */
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .footer-socials a {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-400);
+      transition: color 150ms, border-color 150ms;
+    }
+    .footer-socials a:hover {
+      color: var(--text-100);
+      border-color: var(--border-strong);
+    }
+    .footer-socials svg { width: 14px; height: 14px; }
+
+    /* ── Responsive nav ──────────────── */
+    @media (max-width: 600px) {
+      .nav-links { display: none; }
+      .hero { padding: 100px 20px 60px; }
+    }
+
+    /* ── Plan tab content visibility ─── */
+    .plan-content { display: none; }
+    .plan-content.active { display: block; }
+
+    /* ── Stat row ─── */
+    .stat-row {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      max-width: 620px;
+      margin: 0 auto 56px;
+    }
+
+    .stat-item {
+      flex: 1;
+      min-width: 120px;
+      padding: 18px 20px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--brand);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-400);
+      line-height: 1.3;
+    }
+
+    /* ── Founders section ────────────── */
+    .founders {
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .founders h2 {
+      font-family: var(--font-serif);
+      font-size: clamp(22px, 3.5vw, 32px);
+      font-weight: 600;
+      color: var(--text-000);
+      margin-bottom: 10px;
+    }
+    .founders-sub {
+      font-size: 14px;
+      color: var(--text-400);
+      margin-bottom: 40px;
+    }
+    .founders-grid {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .founder-card {
+      background: var(--bg-200);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px 28px;
+      flex: 1;
+      min-width: 200px;
+      max-width: 240px;
+      transition: border-color 200ms;
+    }
+    .founder-card:hover { border-color: var(--border-strong); }
+    .founder-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: hsla(45,65%,53%,0.15);
+      border: 2px solid hsla(45,65%,53%,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--brand);
+      margin: 0 auto 14px;
+      overflow: hidden;
+    }
+    .founder-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+    }
+    .founder-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-100);
+      margin-bottom: 4px;
+    }
+    .founder-role {
+      font-size: 11px;
+      color: var(--text-400);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .founder-email {
+      font-size: 12px;
+      color: var(--text-400);
+      word-break: break-all;
+      transition: color 150ms;
+    }
+    .founder-email:hover { color: var(--brand); }
+
+    /* ── Banner / trust strip ────────── */
+    .trust-strip {
+      background: var(--bg-000);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-400);
+    }
+
+    .trust-strip strong { color: var(--text-200); }
+  </style>
+</head>
+<body>
+
+<!-- ── Top Nav ──────── -->
+<nav class="topnav">
+  <a href="#" class="topnav-logo">
+    <!-- Claude-style diamond icon -->
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2L20 12L12 22L4 12L12 2Z" fill="hsl(45,65%,53%)" opacity="0.9"/>
+      <path d="M12 6L17 12L12 18L7 12L12 6Z" fill="hsl(60,2.1%,18.4%)"/>
+    </svg>
+    LawPakAI
+  </a>
+
+  <div class="topnav-right nav-links">
+    <button class="btn-ghost" onclick="scrollToSection('how')">How it works</button>
+    <button class="btn-ghost" onclick="scrollToSection('plans')">Plans</button>
+    <button class="btn-ghost" onclick="scrollToSection('faq')">FAQ</button>
+    <button class="btn-ghost" onclick="window.location.href='register.html'">Register</button>
+    <button class="btn-primary" onclick="window.location.href='register.html'">Sign up for free</button>
+  </div>
+
+  <!-- Mobile CTA only -->
+  <div style="display:none" class="mobile-cta-nav">
+    <button class="btn-primary" style="font-size:12px;padding:6px 12px;">Sign up</button>
+  </div>
+</nav>
+
+<!-- ── Hero ────────── -->
+<section class="hero">
+  <canvas class="hero-spiral" id="hero-spiral" aria-hidden="true"></canvas>
+  <div class="container">
+    <p class="section-label" style="margin-bottom:24px;">Pakistan's AI Legal Research Community</p>
+    <h1 data-typewriter data-tw-delay="0.15">Research smarter,<br /><em>win faster.</em></h1>
+    <p class="hero-sub">
+      LawPakAI is an AI legal research assistant trained on 5000+ Pakistani court judgments, statutes, and precedents. Ask in Urdu or English — get cited answers instantly.
+    </p>
+
+    <div class="email-form" style="flex-direction:column; gap:12px; max-width:420px;">
+      <input type="email" id="login-email" placeholder="Email address" style="width:100%;" />
+      <input type="password" id="login-password" placeholder="Password" style="width:100%; padding:14px 20px; border-radius:8px; border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:#fff; font-size:0.95rem; outline:none;" />
+      <button type="button" style="width:100%;" onclick="handleLogin()">Login</button>
+    </div>
+    <p class="hero-note">No credit card required · Free plan available · Cancel anytime · Must be 18 or older</p>
+  </div>
+</section>
+
+<!-- ── Trust strip ─── -->
+<div class="trust-strip">
+  Trusted by <strong>legal professionals</strong> across Pakistan — from Supreme Court advocates to LLB students.
+</div>
+
+<!-- ── Stats ────────── -->
+<section class="meet" style="padding-bottom: 0;">
+  <div class="container">
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="stat-num">5K+</div>
+        <div class="stat-label">Court Judgments</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">120+</div>
+        <div class="stat-label">Statutes & Laws</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">93%</div>
+        <div class="stat-label">Citation Accuracy</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ── How it works / Meet LawPakAI ──────── -->
+<section class="meet" id="how">
+  <div class="container">
+    <p class="section-label">How it works</p>
+    <h2>An AI that knows Pakistani law — deeply.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:24px 0 32px;">
+      <div style="background:var(--bg-200);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="color:var(--brand);font-weight:600;font-size:13px;margin-bottom:6px;">Step 1 — Sign in</div>
+        <p style="font-size:13px;color:var(--text-200);line-height:1.6;">Register a free account to unlock the chat interface. Your questions and past chats stay tied to your profile.</p>
+      </div>
+      <div style="background:var(--bg-200);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="color:var(--brand);font-weight:600;font-size:13px;margin-bottom:6px;">Step 2 — Ask a legal question</div>
+        <p style="font-size:13px;color:var(--text-200);line-height:1.6;">Type your question in English or Urdu. LawPakAI retrieves the most relevant judgments and statutes from a vetted Pakistani law corpus.</p>
+      </div>
+      <div style="background:var(--bg-200);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="color:var(--brand);font-weight:600;font-size:13px;margin-bottom:6px;">Step 3 — Read the cited answer</div>
+        <p style="font-size:13px;color:var(--text-200);line-height:1.6;">Every reply comes with source citations, a structured summary, and a knowledge-graph view that maps how cases relate.</p>
+      </div>
+      <div style="background:var(--bg-200);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="color:var(--brand);font-weight:600;font-size:13px;margin-bottom:6px;">Step 4 — Revisit past chats</div>
+        <p style="font-size:13px;color:var(--text-200);line-height:1.6;">All your conversations are saved on the server — log back in any time to reopen, search, and continue your research.</p>
+      </div>
+    </div>
+    <p class="section-label">Meet LawPakAI</p>
+    <p>
+      LawPakAI isn't a general chatbot. It's purpose-built on PLD, SCMR, KLJ, and the full Pakistani statute book. Every answer comes with a citation you can use in court.
+    </p>
+
+    <!-- Chat preview -->
+    <div class="chat-card">
+      <div class="chat-card-header">
+        <img src="brand_assets/logo.png" alt="LawPakAI" />
+        <div>
+          <div class="chat-card-header-text">LawPakAI</div>
+          <div class="chat-card-header-sub">AI Legal Research Assistant</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11px;color:hsl(142,70%,45%)">
+          <span style="width:6px;height:6px;background:hsl(142,70%,45%);border-radius:50%;display:inline-block;"></span>
+          Online
+        </div>
+      </div>
+      <div class="chat-messages">
+        <div class="msg-user">ضمانت کب ملتی ہے اور سیشن کورٹ میں اس کا طریقہ کار کیا ہے؟</div>
+        <div class="msg-ai">
+          Under <strong>Section 497 Cr.P.C</strong>, bail in non-bailable offences is at the court's discretion. The Session Court may grant bail if:<br /><br />
+          <strong>1.</strong> There is no reasonable ground to believe the accused committed the offence<br />
+          <strong>2.</strong> The accused is a woman, child, or sick person (S.497(1) proviso)<br />
+          <strong>3.</strong> Investigation is not completed within 30 days (S.497(2))<br /><br />
+          Courts weigh <em>prima facie</em> evidence, flight risk, and public interest per <strong>PLD 2021 SC 334</strong>.
+          <br /><br />
+          <span class="cite-tag">PLD 2021 SC 334 · Cr.P.C §497</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature pills -->
+    <div class="feature-pills">
+      <span class="pill">
+        <svg class="pill-icon" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-width="1.5" stroke-linecap="round" d="M8 2a6 6 0 100 12A6 6 0 008 2zm0 0v12M2 8h12"/></svg>
+        Case research
+      </span>
+      <span class="pill">
+        <svg class="pill-icon" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-width="1.5" stroke-linecap="round" d="M8 2l2 5h5l-4 3 1.5 5L8 12l-4.5 3L5 10 1 7h5z"/></svg>
+        Cited answers
+      </span>
+      <span class="pill">
+        <svg class="pill-icon" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-width="1.5" stroke-linecap="round" d="M5 8h6M8 5v6"/></svg>
+        Community forum
+      </span>
+      <span class="pill">
+        <svg class="pill-icon" fill="none" viewBox="0 0 16 16" stroke="currentColor"><path stroke-width="1.5" stroke-linecap="round" d="M2 13l3-3 3 3 6-8"/></svg>
+        SC · HC databases
+      </span>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ── Plans ────────── -->
+<section class="plans" id="plans">
+  <div class="plans-header">
+    <p class="section-label">Explore plans</p>
+    <h2>Start free, scale as you grow</h2>
+    <p>Every plan includes access to LawPakAI AI, case search, and the community forum.</p>
+  </div>
+
+  <!-- Tabs -->
+  <div class="plan-tabs" role="tablist">
+    <button class="plan-tab active" onclick="switchPlan('individual',this)">Individual</button>
+    <button class="plan-tab" onclick="switchPlan('team',this)">Team</button>
+  </div>
+
+  <!-- Individual plans -->
+  <div class="plan-content active" id="plan-individual">
+    <div class="plan-grid">
+
+      <!-- Free -->
+      <div class="plan-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">Rs 0</div>
+        <div class="plan-desc">Get started with AI legal research at no cost.</div>
+        <button class="plan-btn plan-btn-outline">Get started</button>
+        <div class="plan-divider"></div>
+        <p class="plan-features-label">Free includes</p>
+        <ul class="plan-features">
+          <li>30 AI queries per month</li>
+          <li>Access to 50K+ case database</li>
+          <li>Community forum access</li>
+          <li>Urdu & English support</li>
+          <li>Cited source links</li>
+        </ul>
+      </div>
+
+      <!-- Pro -->
+      <div class="plan-card featured">
+        <div class="plan-name" style="color:var(--brand)">Pro</div>
+        <div class="plan-price">Rs 1,499 <span>/ month</span></div>
+        <div class="plan-desc">Unlimited research for practicing lawyers and law students.</div>
+        <button class="plan-btn plan-btn-brand">Subscribe to Pro</button>
+        <div class="plan-divider"></div>
+        <p class="plan-features-label">Everything in Free, plus</p>
+        <ul class="plan-features">
+          <li>Unlimited AI queries</li>
+          <li>AI document drafting</li>
+          <li>Full PLD & SCMR search</li>
+          <li>Export citations to Word/PDF</li>
+          <li>Priority support</li>
+          <li>Monthly legal digest newsletter</li>
+        </ul>
+      </div>
+
+      <!-- Max -->
+      <div class="plan-card">
+        <div class="plan-name">Max</div>
+        <div class="plan-price">Rs 3,999 <span>/ month</span></div>
+        <div class="plan-desc">For law firms and power users who need maximum capability.</div>
+        <button class="plan-btn plan-btn-outline">Subscribe to Max</button>
+        <div class="plan-divider"></div>
+        <p class="plan-features-label">Everything in Pro, plus</p>
+        <ul class="plan-features">
+          <li>Extended context for long documents</li>
+          <li>Bulk case analysis</li>
+          <li>API access for firm integration</li>
+          <li>Dedicated account manager</li>
+          <li>Custom statute corpus upload</li>
+          <li>Early access to new features</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Team plans -->
+  <div class="plan-content" id="plan-team">
+    <div class="plan-grid" style="max-width:580px;">
+
+      <div class="plan-card featured">
+        <div class="plan-name" style="color:var(--brand)">Team</div>
+        <div class="plan-price">Rs 999 <span>/ seat / mo</span></div>
+        <div class="plan-desc">For law firms, legal departments, and academia. Minimum 5 seats.</div>
+        <button class="plan-btn plan-btn-brand">Contact sales</button>
+        <div class="plan-divider"></div>
+        <p class="plan-features-label">Team includes</p>
+        <ul class="plan-features">
+          <li>All Max features per seat</li>
+          <li>Centralised billing & admin</li>
+          <li>Shared research library</li>
+          <li>Team annotation & collaboration</li>
+          <li>SSO / custom login</li>
+          <li>Onboarding & training session</li>
+        </ul>
+      </div>
+
+      <div class="plan-card">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price" style="font-size:22px;padding-top:4px;">Custom pricing</div>
+        <div class="plan-desc">For large institutions, government bodies, and bar councils.</div>
+        <button class="plan-btn plan-btn-outline">Talk to us</button>
+        <div class="plan-divider"></div>
+        <p class="plan-features-label">Enterprise includes</p>
+        <ul class="plan-features">
+          <li>Custom deployment options</li>
+          <li>Private corpus & data isolation</li>
+          <li>Compliance & audit logs</li>
+          <li>SLA guarantees</li>
+          <li>Integration with existing firm software</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ── Founders ────── -->
+<section class="founders">
+  <div class="container">
+    <p class="section-label">The Team</p>
+    <h2>Built by</h2>
+    <p class="founders-sub">The people behind LawPakAI</p>
+    <div class="founders-grid">
+
+      <div class="founder-card">
+        <div class="founder-avatar">
+          <img src="brand_assets/zaid.jpeg" alt="Zaid Rahim" />
+        </div>
+        <div class="founder-name">Zaid Rahim</div>
+        <div class="founder-role">Co-Founder</div>
+        <a class="founder-email" href="mailto:zaidrahim162@gmail.com">zaidrahim162@gmail.com</a>
+      </div>
+
+      <div class="founder-card">
+        <div class="founder-avatar">
+          <img src="brand_assets/daud.jpeg" alt="Daud Aman" />
+        </div>
+        <div class="founder-name">Daud Aman</div>
+        <div class="founder-role">Co-Founder</div>
+        <a class="founder-email" href="mailto:daudaman22@gmail.com">daudaman22@gmail.com</a>
+      </div>
+
+      <div class="founder-card">
+        <div class="founder-avatar">
+          <img src="brand_assets/jarrar.jpeg" alt="Jarrar Shaf" />
+        </div>
+        <div class="founder-name">Jarrar Shaf</div>
+        <div class="founder-role">Co-Founder</div>
+        <a class="founder-email" href="mailto:jarrarshaf74@gmail.com">jarrarshaf74@gmail.com</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ── FAQ ──────────── -->
+<section class="faq" id="faq">
+  <p class="section-label">FAQ</p>
+  <h2>Frequently asked questions</h2>
+
+  <div id="faq-list"></div>
+</section>
+
+<div class="sep"></div>
+
+<!-- ── Footer ──────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-brand-logo">
+        <img src="brand_assets/logo.png" alt="LawPakAI" />
+        LawPakAI
+      </div>
+      <p class="footer-tagline">Pakistan's AI Legal Research Assistant — making quality legal research accessible to every lawyer, student, and citizen.</p>
+      <div class="footer-socials">
+        <a href="https://x.com/LawPakLS" target="_blank" rel="noopener" aria-label="X / Twitter">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/company/lawpakai/" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="#" onclick="openMail();return false;" aria-label="Support Email">
+          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Platform</p>
+      <ul class="footer-links">
+        <li><a href="#how" onclick="scrollToSection('how');return false;">AI Research</a></li>
+        <li><a href="#how" onclick="scrollToSection('how');return false;">Case Database</a></li>
+        <li><a href="#plans" onclick="scrollToSection('plans');return false;">Plans</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Resources</p>
+      <ul class="footer-links">
+        <li><a href="#faq" onclick="scrollToSection('faq');return false;">FAQ</a></li>
+        <li><a href="#how" onclick="scrollToSection('how');return false;">How it works</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Company</p>
+      <ul class="footer-links">
+        <li><a href="#" onclick="openMail();return false;">Support</a></li>
+        <li><a href="https://www.linkedin.com/company/lawpakai/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://x.com/LawPakLS" target="_blank" rel="noopener">X / Twitter</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="footer-col-title">Legal</p>
+      <ul class="footer-links">
+        <li><a href="#" onclick="comingSoon('Privacy Policy');return false;">Privacy Policy</a></li>
+        <li><a href="#" onclick="comingSoon('Terms of Service');return false;">Terms of Service</a></li>
+        <li><a href="#" onclick="comingSoon('Disclaimer');return false;">Disclaimer</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sep" style="margin-bottom:20px;max-width:1080px;margin-left:auto;margin-right:auto;"></div>
+
+  <div class="footer-bottom">
+    <div class="footer-bottom-left">
+      <a href="#" onclick="comingSoon('Privacy');return false;">Privacy</a>
+      <a href="#" onclick="comingSoon('Terms');return false;">Terms</a>
+    </div>
+    <p class="footer-copyright">© 2025 LawPakAI. All rights reserved. · 18+ only</p>
+  </div>
+</footer>
+
+<script>
+  // ── FAQ data ──
+  const faqs = [
+    { q: "What is LawPakAI AI?", a: "LawPakAI is an AI-powered legal research assistant trained specifically on Pakistani law — including Supreme Court, High Court, and Sessions Court judgments, as well as the full Pakistani statute book. It lets you ask legal questions in Urdu or English and receive cited, structured answers." },
+    { q: "What legal databases does LawPakAI cover?", a: "LawPakAI covers Pakistan Law Digest (PLD), Supreme Court Monthly Review (SCMR), Karachi Law Journal (KLJ), All Pakistan Legal Decisions (APLD), and the complete Pakistani statute book including recent federal and provincial ordinances." },
+    { q: "Is LawPakAI free to use?", a: "Yes. LawPakAI has a free plan with 30 AI queries per month and full access to the case database and community forum. Pro and Max plans offer unlimited queries, document drafting, and additional features." },
+    { q: "Can I use LawPakAI in Urdu?", a: "Absolutely. LawPakAI fully supports Urdu queries. You can type your legal question in Urdu and receive an answer in Urdu, English, or both. Our AI understands legal terminology in both languages natively." },
+    { q: "Is my data private and confidential?", a: "Yes. We do not store your queries, we do not use your conversations for AI training, and all communication is end-to-end encrypted. Your legal queries are treated with the same confidentiality as conversations with your own client." },
+    { q: "How accurate are the citations?", a: "LawPakAI achieves 98%+ citation accuracy by grounding every answer in actual case law from our database. We always recommend verifying critical citations through official sources (PLD, SCMR) before submitting to courts." },
+    { q: "Who can use LawPakAI?", a: "LawPakAI is built for practicing advocates, law students, judges' clerks, legal advisors, and anyone who needs to understand Pakistani law. It's especially valuable for lawyers who want to research faster and for students learning case law." },
+    { q: "What are the plans available for law firms?", a: "We offer Team plans (from 5 seats) and Enterprise plans with custom pricing, private corpus, SSO, audit logs, and dedicated onboarding. Contact us to discuss your firm's specific needs." },
+    { q: "How does the Knowledge Graph feature work?", a: "LawPakAI uses a Neo4j-powered Knowledge Graph that maps relationships between cases, judges, petitioners, respondents, legal sections, and decisions. When you ask a question, you can view a visual graph showing how cases are interconnected — including which judges presided, which sections were cited, and how decisions relate to each other." },
+    { q: "Can I use LawPakAI for court filings?", a: "LawPakAI is a research and drafting assistant, not a filing service. You can use it to research case law, generate draft petitions, and verify citations. However, all outputs should be reviewed by a qualified legal professional before submission to any court." },
+    { q: "What courts and tribunals does LawPakAI cover?", a: "LawPakAI covers the Supreme Court of Pakistan, all five High Courts (Lahore, Sindh, Islamabad, Peshawar, Balochistan), Federal Shariat Court, and selected tribunal decisions. We are continuously expanding our database to include more district-level and tribunal rulings." },
+    { q: "How do I cancel or change my subscription?", a: "You can cancel or change your plan at any time from your account settings. Downgrades take effect at the end of your current billing cycle. Upgrades are applied immediately with prorated billing. No cancellation fees — ever." },
+    { q: "Is LawPakAI available on mobile?", a: "Yes. LawPakAI is fully responsive and works on any modern mobile browser. We are also working on dedicated iOS and Android apps for an even better mobile experience, expected in Q3 2025." },
+  ];
+
+  const faqList = document.getElementById('faq-list');
+  faqs.forEach((f, i) => {
+    const item = document.createElement('div');
+    item.className = 'faq-item';
+    item.innerHTML = `
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>${f.q}</span>
+        <svg class="faq-chevron" fill="none" viewBox="0 0 16 16" stroke="currentColor">
+          <path stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 6l4 4 4-4"/>
+        </svg>
+      </button>
+      <div class="faq-a">${f.a}</div>
+    `;
+    faqList.appendChild(item);
+  });
+
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!isOpen) item.classList.add('open');
+  }
+
+  // ── Open email (Gmail web + mailto fallback) ──
+  const SUPPORT_EMAIL = 'lawpaklegalsystem62@gmail.com';
+  function openMail(subject, body) {
+    const s = encodeURIComponent(subject || 'LawPakAI — Support');
+    const b = encodeURIComponent(body || '');
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${SUPPORT_EMAIL}&su=${s}&body=${b}`;
+    const win = window.open(gmailUrl, '_blank');
+    if (!win) window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${s}&body=${b}`;
+  }
+
+  // ── Coming-soon toast ──
+  function comingSoon(label) {
+    let t = document.getElementById('coming-soon-toast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'coming-soon-toast';
+      t.style.cssText = 'position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg-200);border:1px solid var(--brand);color:var(--text-000);padding:14px 22px;border-radius:10px;font-size:14px;font-weight:500;box-shadow:0 8px 32px rgba(0,0,0,0.4);z-index:9999;opacity:0;transition:opacity 220ms, transform 220ms;';
+      document.body.appendChild(t);
+    }
+    t.innerHTML = `<span style="color:var(--brand);font-weight:600;">${label}</span> — coming soon`;
+    requestAnimationFrame(() => {
+      t.style.opacity = '1';
+      t.style.transform = 'translateX(-50%) translateY(0)';
+    });
+    clearTimeout(t._hideT);
+    t._hideT = setTimeout(() => {
+      t.style.opacity = '0';
+      t.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 1800);
+  }
+
+  // ── Smooth-scroll nav ──
+  function scrollToSection(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const navH = document.querySelector('.topnav')?.offsetHeight || 0;
+    const top = el.getBoundingClientRect().top + window.pageYOffset - navH - 8;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  // ── Plan tabs ──
+  function switchPlan(plan, btn) {
+    document.querySelectorAll('.plan-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.plan-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('plan-' + plan).classList.add('active');
+  }
+
+  // ── Login handler ──
+  async function handleLogin() {
+    const email = document.getElementById('login-email').value.trim();
+    const pw    = document.getElementById('login-password').value;
+    if (!email || !pw) {
+      showLoginError('Please enter your email and password.');
+      return;
+    }
+
+    const users = JSON.parse(localStorage.getItem('lawpak_users') || '[]');
+    const user  = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+
+    if (!user) {
+      showLoginError('No account found with this email. Please register first.');
+      return;
+    }
+    if (user.password !== pw) {
+      showLoginError('Incorrect password. Please try again.');
+      return;
+    }
+
+    localStorage.setItem('lawpak_user', JSON.stringify({ name: user.name, email: user.email, plan: user.plan || 'free' }));
+
+    // Also obtain a backend JWT for document upload features
+    try {
+      let res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.toLowerCase(), password: pw }),
+      });
+      if (!res.ok) {
+        // User not in backend DB yet — auto-register them
+        res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.toLowerCase(), password: pw, full_name: user.name }),
+        });
+      }
+      if (res.ok) {
+        const data = await res.json();
+        sessionStorage.setItem('lawpakai_auth', JSON.stringify({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token || null,
+          user: { email: email.toLowerCase(), name: user.name },
+        }));
+      }
+    } catch (_) { /* backend offline — chat still works, doc upload needs server */ }
+
+    window.location.href = 'chat.html?name=' + encodeURIComponent(user.name);
+  }
+
+  function showLoginError(msg) {
+    let el = document.getElementById('login-error');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'login-error';
+      Object.assign(el.style, {
+        color: '#ff6b6b', fontSize: '13px', fontWeight: '500',
+        marginTop: '4px', textAlign: 'left', width: '100%'
+      });
+      document.getElementById('login-password').parentElement.insertBefore(el, document.getElementById('login-password').nextSibling);
+    }
+    el.textContent = msg;
+    setTimeout(() => { if (el) el.textContent = ''; }, 5000);
+  }
+
+  // ── Show notification if redirected from chat ──
+  (function() {
+    const p = new URLSearchParams(window.location.search);
+    if (p.get('auth') === 'required') {
+      const toast = document.createElement('div');
+      toast.textContent = 'Please log in to access the chat.';
+      Object.assign(toast.style, {
+        position:'fixed', top:'68px', left:'50%', transform:'translateX(-50%)',
+        background:'hsl(0,70%,55%)', color:'#fff', padding:'10px 24px',
+        borderRadius:'8px', fontSize:'13px', fontWeight:'600', zIndex:'9999',
+        boxShadow:'0 4px 20px rgba(0,0,0,0.4)', fontFamily:'Inter,sans-serif'
+      });
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+  })();
+
+  // ── Nav scroll opacity ──
+  const nav = document.querySelector('.topnav');
+  window.addEventListener('scroll', () => {
+    nav.style.background = window.scrollY > 40
+      ? 'hsla(60,2.7%,14.5%,0.96)'
+      : 'hsla(60,2.7%,14.5%,0.88)';
+  });
+</script>
+
+<!-- ── Hero spiral animation (vanilla JS, no deps) ─────────── -->
+<script>
+(function () {
+  const canvas = document.getElementById('hero-spiral');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  const CHANGE_EVENT_TIME    = 0.32;
+  const CAMERA_Z             = -400;
+  const CAMERA_TRAVEL        = 3400;
+  const START_DOT_Y_OFFSET   = 28;
+  const VIEW_ZOOM            = 100;
+  const NUM_STARS            = 2200;          // lowered from 5000 for hero perf
+  const TRAIL_LENGTH         = 80;
+  const CYCLE_MS             = 15000;
+  const STAR_COLOR           = 'rgba(233, 196, 106, 1)';  // brand gold
+  const TRAIL_COLOR          = 'rgba(233, 196, 106, 0.95)';
+
+  // ── Math helpers ──
+  const ease = (p, g) => p < 0.5
+    ? 0.5 * Math.pow(2 * p, g)
+    : 1 - 0.5 * Math.pow(2 * (1 - p), g);
+  const easeOutElastic = (x) => {
+    if (x <= 0) return 0;
+    if (x >= 1) return 1;
+    const c4 = (2 * Math.PI) / 4.5;
+    return Math.pow(2, -8 * x) * Math.sin((x * 8 - 0.75) * c4) + 1;
+  };
+  const map = (v, a, b, c, d) => c + (d - c) * ((v - a) / (b - a));
+  const clamp = (v, lo, hi) => Math.min(Math.max(v, lo), hi);
+  const lerp = (a, b, t) => a * (1 - t) + b * t;
+  const rnd  = (lo, hi) => lo + Math.random() * (hi - lo);
+
+  const spiralPath = (p) => {
+    p = clamp(1.2 * p, 0, 1);
+    p = ease(p, 1.8);
+    const turns = 6;
+    const theta = 2 * Math.PI * turns * Math.sqrt(p);
+    const r = 170 * Math.sqrt(p);
+    return { x: r * Math.cos(theta), y: r * Math.sin(theta) + START_DOT_Y_OFFSET };
+  };
+
+  const rotate = (a, b, p, orientation) => {
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const dx = a.x - mx;
+    const dy = a.y - my;
+    const angle = Math.atan2(dy, dx);
+    const o = orientation ? -1 : 1;
+    const r = Math.sqrt(dx * dx + dy * dy);
+    const bounce = Math.sin(p * Math.PI) * 0.05 * (1 - p);
+    return {
+      x: mx + r * (1 + bounce) * Math.cos(angle + o * Math.PI * easeOutElastic(p)),
+      y: my + r * (1 + bounce) * Math.sin(angle + o * Math.PI * easeOutElastic(p)),
+    };
+  };
+
+  // ── Deterministic-seeded star field ──
+  const seeded = (() => {
+    let s = 1234;
+    return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
+  })();
+  const withSeed = (fn) => {
+    const orig = Math.random;
+    Math.random = seeded;
+    try { fn(); } finally { Math.random = orig; }
+  };
+
+  function Star() {
+    this.angle             = Math.random() * Math.PI * 2;
+    this.distance          = 30 * Math.random() + 15;
+    this.rotationDirection = Math.random() > 0.5 ? 1 : -1;
+    this.expansionRate     = 1.2 + Math.random() * 0.8;
+    this.finalScale        = 0.7 + Math.random() * 0.6;
+    this.dx                = this.distance * Math.cos(this.angle);
+    this.dy                = this.distance * Math.sin(this.angle);
+    this.spiralLocation    = (1 - Math.pow(1 - Math.random(), 3.0)) / 1.3;
+    let z                  = rnd(0.5 * CAMERA_Z, CAMERA_TRAVEL + CAMERA_Z);
+    this.z                 = lerp(z, CAMERA_TRAVEL / 2, 0.3 * this.spiralLocation);
+    this.strokeWeightFactor = Math.pow(Math.random(), 2.0);
+  }
+
+  const stars = [];
+  withSeed(() => { for (let i = 0; i < NUM_STARS; i++) stars.push(new Star()); });
+
+  // ── Canvas sizing (DPR-aware, fills hero box) ───────────
+  let cssW = 0, cssH = 0, dpr = 1;
+  const resize = () => {
+    const rect = canvas.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    dpr  = window.devicePixelRatio || 1;
+    cssW = rect.width;
+    cssH = rect.height;
+    canvas.width  = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+  };
+  resize();
+  window.addEventListener('resize', resize);
+
+  // ── Projection (drawn with current transform at center) ─
+  const showDot = (time, x3, y3, z3, sizeFactor) => {
+    const t2 = clamp(map(time, CHANGE_EVENT_TIME, 1, 0, 1), 0, 1);
+    const newCamZ = CAMERA_Z + ease(Math.pow(t2, 1.2), 1.8) * CAMERA_TRAVEL;
+    if (z3 <= newCamZ) return;
+    const depth = z3 - newCamZ;
+    const x = VIEW_ZOOM * x3 / depth;
+    const y = VIEW_ZOOM * y3 / depth;
+    const sw = 400 * sizeFactor / depth;
+    ctx.lineWidth = sw;
+    ctx.beginPath();
+    ctx.arc(x, y, 0.5, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  const renderStar = (star, t1, time) => {
+    const spiralPos = spiralPath(star.spiralLocation);
+    const q = t1 - star.spiralLocation;
+    if (q <= 0) return;
+
+    const dp = clamp(4 * q, 0, 1);
+    const linE = dp;
+    const elE  = easeOutElastic(dp);
+    const powE = dp * dp;
+    let easing;
+    if (dp < 0.3)      easing = lerp(linE, powE, dp / 0.3);
+    else if (dp < 0.7) easing = lerp(powE, elE, (dp - 0.3) / 0.4);
+    else               easing = elE;
+
+    let sx, sy;
+    if (dp < 0.3) {
+      sx = lerp(spiralPos.x, spiralPos.x + star.dx * 0.3, easing / 0.3);
+      sy = lerp(spiralPos.y, spiralPos.y + star.dy * 0.3, easing / 0.3);
+    } else if (dp < 0.7) {
+      const mp = (dp - 0.3) / 0.4;
+      const curve = Math.sin(mp * Math.PI) * star.rotationDirection * 1.5;
+      const bx = spiralPos.x + star.dx * 0.3;
+      const by = spiralPos.y + star.dy * 0.3;
+      const tx = spiralPos.x + star.dx * 0.7;
+      const ty = spiralPos.y + star.dy * 0.7;
+      const px = -star.dy * 0.4 * curve;
+      const py =  star.dx * 0.4 * curve;
+      sx = lerp(bx, tx, mp) + px * mp;
+      sy = lerp(by, ty, mp) + py * mp;
+    } else {
+      const fp = (dp - 0.7) / 0.3;
+      const bx = spiralPos.x + star.dx * 0.7;
+      const by = spiralPos.y + star.dy * 0.7;
+      const tDist = star.distance * star.expansionRate * 1.5;
+      const sAngle = star.angle + 1.2 * star.rotationDirection * fp * Math.PI;
+      const tx = spiralPos.x + tDist * Math.cos(sAngle);
+      const ty = spiralPos.y + tDist * Math.sin(sAngle);
+      sx = lerp(bx, tx, fp);
+      sy = lerp(by, ty, fp);
+    }
+
+    const vx = (star.z - CAMERA_Z) * sx / VIEW_ZOOM;
+    const vy = (star.z - CAMERA_Z) * sy / VIEW_ZOOM;
+
+    let sizeMul;
+    if (dp < 0.6) sizeMul = 1.0 + dp * 0.2;
+    else          sizeMul = 1.2 * (1 - (dp - 0.6) / 0.4) + star.finalScale * ((dp - 0.6) / 0.4);
+
+    showDot(time, vx, vy, star.z, 8.5 * star.strokeWeightFactor * sizeMul);
+  };
+
+  const drawTrail = (t1, time) => {
+    ctx.fillStyle = TRAIL_COLOR;
+    for (let i = 0; i < TRAIL_LENGTH; i++) {
+      const f = map(i, 0, TRAIL_LENGTH, 1.1, 0.1);
+      const sw = (1.3 * (1 - t1) + 3.0 * Math.sin(Math.PI * t1)) * f;
+      const pathTime = t1 - 0.00015 * i;
+      const p = spiralPath(pathTime);
+      const offset = { x: p.x + 5, y: p.y + 5 };
+      const r = rotate(p, offset, Math.sin(time * Math.PI * 2) * 0.5 + 0.5, i % 2 === 0);
+      ctx.lineWidth = sw;
+      ctx.beginPath();
+      ctx.arc(r.x, r.y, Math.max(0.2, sw / 2), 0, Math.PI * 2);
+      ctx.fill();
+    }
+  };
+
+  const drawStartDot = (time) => {
+    if (time <= CHANGE_EVENT_TIME) return;
+    const dy = CAMERA_Z * START_DOT_Y_OFFSET / VIEW_ZOOM;
+    showDot(time, 0, dy, CAMERA_TRAVEL, 2.5);
+  };
+
+  // ── Main loop ─────
+  const start = performance.now();
+  let rafId = 0;
+  let paused = false;
+
+  const frame = () => {
+    if (paused) { rafId = requestAnimationFrame(frame); return; }
+    const time = ((performance.now() - start) % CYCLE_MS) / CYCLE_MS;
+
+    // Clear (let site bg show through) — DPR-scaled transform is active, so use CSS dims
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.scale(dpr, dpr);
+
+    ctx.save();
+    ctx.translate(cssW / 2, cssH / 2);
+
+    const t1 = clamp(map(time, 0, CHANGE_EVENT_TIME + 0.25, 0, 1), 0, 1);
+    const t2 = clamp(map(time, CHANGE_EVENT_TIME, 1, 0, 1), 0, 1);
+    ctx.rotate(-Math.PI * ease(t2, 2.7));
+
+    drawTrail(t1, time);
+
+    ctx.fillStyle = STAR_COLOR;
+    for (let i = 0; i < stars.length; i++) renderStar(stars[i], t1, time);
+
+    drawStartDot(time);
+
+    ctx.restore();
+    rafId = requestAnimationFrame(frame);
+  };
+
+  // Pause when hero is off-screen to save CPU
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(([e]) => { paused = !e.isIntersecting; }, { threshold: 0.01 });
+    io.observe(canvas);
+  }
+  document.addEventListener('visibilitychange', () => { paused = document.hidden; });
+
+  rafId = requestAnimationFrame(frame);
+})();
+</script>
+
+<script>
+/* Typewriter reveal for [data-typewriter] headings */
+(function () {
+  function initTypewriter(root) {
+    const els = (root || document).querySelectorAll('[data-typewriter]:not([data-tw-init])');
+    els.forEach((el) => {
+      el.setAttribute('data-tw-init', '1');
+      const startDelay = parseFloat(el.dataset.twDelay || '0');
+      const lines = el.innerHTML.split(/<br\s*\/?>/i);
+      el.innerHTML = '';
+      let t = startDelay;
+      lines.forEach((html, idx) => {
+        if (idx > 0) el.appendChild(document.createElement('br'));
+        const span = document.createElement('span');
+        span.className = 'tw-line';
+        span.innerHTML = html;
+        const textLen = (span.textContent || '').trim().length || 1;
+        const dur = Math.max(0.6, Math.min(2.2, textLen * 0.06));
+        span.style.setProperty('--tw-duration', dur + 's');
+        span.style.setProperty('--tw-delay', t + 's');
+        el.appendChild(span);
+        t += dur;
+      });
+      const cursor = document.createElement('span');
+      cursor.className = 'tw-cursor';
+      cursor.style.setProperty('--tw-cursor-delay', t + 's');
+      el.appendChild(cursor);
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initTypewriter());
+  } else {
+    initTypewriter();
+  }
+})();
+</script>
+
+</body>
+</html>
